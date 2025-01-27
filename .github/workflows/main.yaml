@@ -5,6 +5,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
       - uses: graalvm/setup-graalvm@v1
         with:
           java-version: '21'      # See 'Options' for more details
@@ -19,3 +26,8 @@ jobs:
           native-image --version
       - name: Maven build
         run: mvn -Pnative native:compile
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: spring-web-native
+          path: /home/runner/work/spring-web-native/spring-web-native/target/spring-web-native
