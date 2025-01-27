@@ -18,4 +18,4 @@ jobs:
           java --version
           native-image --version
       - name: Maven build
-        run: mvn -Pnative package
+        run: mvn -Pnative native:compile
